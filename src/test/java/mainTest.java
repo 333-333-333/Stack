@@ -1,3 +1,4 @@
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,11 +33,21 @@ class mainTest {
     public void testCargarInventarioDefault() {
         HashMap<String, Integer> test = new HashMap<>();
         test.put("Test1",1);
-        test.put("Test2",2);
-        String input ="Test1:1\nTest2:2";
-        assertEquals(test, main.cargarInventario(input));
+        test.put("Test2",1);
+        assertEquals(test, main.cargarInventario("Inventarios/[PruebasUnitarias].txt"));
     }
 
-    // Test relacionados a guardar inventarios
+    @Test
+    @DisplayName("Comprobar si se puede pasar de string a hashmap con un archivo vacio")
+    public void testCargarInventarioDefaultVacio() {
+        HashMap<String, Integer> test = new HashMap<>();
+        assertEquals(test, main.cargarInventario("Inventarios/[PruebasUnitariasVacio].txt"));
+    }
 
+    @Test
+    void escribirArchivo() {
+
+        
+    }
+    // Test relacionados a guardar inventarios
 }
