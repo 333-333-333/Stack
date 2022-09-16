@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -8,6 +9,7 @@ import java.util.*;
 public class main {
 
     public static void main(String[] args) {
+        crearDirectorio("Inventarios");
         menu();
     }
 
@@ -78,12 +80,22 @@ public class main {
     }
 
     public static void mostrarInventario(HashMap<String, Integer> inventario) {
-        System.out.println("Objeto - Cantidad :");
-        int i = 0;
-        for (Map.Entry<String, Integer> objeto : inventario.entrySet()) {
-            System.out.println("[" + i + "]" + objeto.getKey() + "-" + objeto.getValue());
-            i++;
+        try {
+            System.out.println("Objeto - Cantidad :");
+            int i = 0;
+            for (Map.Entry<String, Integer> objeto : inventario.entrySet()) {
+                System.out.println("[" + i + "]" + objeto.getKey() + "-" + objeto.getValue());
+                i++;
+            }
         }
+        catch (NullPointerException e){
+            System.out.println("El inventario es nulo");
+        }
+        catch (IndexOutOfBoundsException e) {
+            System.out.println("El indice al cual se trató de acceder está lejano al tamaño del inventario");
+        }
+
+
     }
 
     public static void mostrarInventario() {
@@ -148,14 +160,18 @@ public class main {
     }
 
     public static void eliminarObjetoInventario(HashMap<String, Integer> inventario) {
-        System.out.println("¿Que deseas eliminar? [Introducir nombre del objeto]");
+        System.out.println("¿Que deseas eliminar? [Introducir índice del objeto]");
         mostrarInventario(inventario);
         try {
-            String opcion = validarString();
-            inventario.remove(opcion);
+            int opcion = validarInt();
+            if (opcion >= 0 && opcion < inventario.size()){
+                inventario.remove(opcion);
+            } else {
+                System.out.println("No seleccionaste un objeto.");
+            }
             System.out.println("Objeto eliminado con exito.");
-        }catch (Exception e){
-            System.out.println("El objeto que intentas eliminar no se encuentra en el inventario.");
+        }catch (NullPointerException e){
+            System.out.println("El inventario es nulo.");
         }
         mostrarInventario(inventario);
     }
@@ -167,15 +183,30 @@ public class main {
         escribirArchivo(nombreArchivo, inventarioAString);
     }
 
+    public static List<String> leerArchivoPorLineas(String ruta) {
+        Path archivo = Paths.get(ruta);
+        List<String>contenido = new ArrayList<>();
+        try {
+            contenido = Files.readAllLines(archivo);
+        } catch (IOException e) {
+            System.out.println("El archivo no pudo ser leido");
+        }
+        return contenido;
+    }
+
     public static String inventarioAString(HashMap<String, Integer> inventario) {
         String retorno = "";
         int contador = 1;
-        for (Map.Entry<String, Integer> objeto : inventario.entrySet()) {
-            retorno += objeto.getKey()+":"+objeto.getValue();
-            if (contador<inventario.size()) {
-                retorno+="\n";
-                contador++;
+        try {
+            for (Map.Entry<String, Integer> objeto : inventario.entrySet()) {
+                retorno += objeto.getKey() + ":" + objeto.getValue();
+                if (contador < inventario.size()) {
+                    retorno += "\n";
+                    contador++;
+                }
             }
+        } catch (NullPointerException e) {
+            System.out.println("El inventario es nulo");
         }
         return retorno;
     }
@@ -189,17 +220,6 @@ public class main {
             System.out.println("Seleccione otro índice de inventario");
             return seleccionarArchivoInventario();
         }
-    }
-
-    public static String abrirArchivoInventario(String ruta) {
-        Path archivo = Paths.get(ruta);
-        String texto = "";
-        try {
-            texto = new String(Files.readAllBytes(archivo));
-        } catch (IOException e) {
-            System.out.println("El archivo del inventario no puede ser leido");
-        }
-        return texto;
     }
 
     public static HashMap<String, Integer> cargarInventario(String ruta) {
@@ -230,8 +250,15 @@ public class main {
         try {
             Files.write(archivo, contenido.getBytes());
             System.out.println("El inventario se ha guardado exitosamente en " + ruta);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.out.println("El archivo no pudo ser creado.");
+        }
+        catch (InvalidPathException e) {
+            System.out.println("La ruta es inválida.");
+        }
+        catch (NullPointerException e) {
+            System.out.println("El archivo es nulo");
         }
     }
 
@@ -266,17 +293,6 @@ public class main {
             input.nextLine();
             return validarInt();
         }
-    }
-
-    public static List<String> leerArchivoPorLineas(String ruta) {
-        Path archivo = Paths.get(ruta);
-        List<String>contenido = new ArrayList<>();
-        try {
-            contenido = Files.readAllLines(archivo);
-        } catch (IOException e) {
-            System.out.println("El archivo no pudo ser leido");
-        }
-        return contenido;
     }
 
 }
