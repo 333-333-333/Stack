@@ -1,0 +1,7 @@
+[Boleta]
+ 2022 10 25 09-58-09
+
+a
+Precio: 30
+Total de la compra: 30
+¡Gracias por tu compra! <3.
