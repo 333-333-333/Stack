@@ -1,0 +1,1 @@
+import controller.ControladorPrincipal;import utillities.GestorArchivos;import view.GUIPrincipal;public class Stack {    public static void ejecutar() {        GestorArchivos.crearDirectorio("Empresas");        GestorArchivos.crearDirectorio("Boletas");;        GUIPrincipal principal = new GUIPrincipal();    }}
