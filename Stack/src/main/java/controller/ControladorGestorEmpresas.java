@@ -272,12 +272,17 @@ public class ControladorGestorEmpresas
      * @throws Exception
      */
     protected void gestionarSobreEscritura() throws Exception {
-        if (obtenerEmpresas().contains(this.Modelo.getNombre())) {
-            if(!confirmarAccion("Se sobreescribirá la empresa")) {
-                return;
+        try {
+            if (obtenerEmpresas().contains(this.Modelo.getNombre())) {
+                if (!confirmarAccion("Se sobreescribirá la empresa")) {
+                    return;
+                }
             }
+
+            guardarEmpresa();
+        } catch (Exception e) {
+            guardarEmpresa();
         }
-        guardarEmpresa();
     }
 
     /**
